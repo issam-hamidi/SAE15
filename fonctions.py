@@ -42,7 +42,11 @@ def covariance(liste_x, liste_y, moyenne_x, moyenne_y):
     return resultat
 
 def coefficient_correlation(liste_x, liste_y, moyenne_x, moyenne_y):
-    return covariance(liste_x, liste_y, moyenne_x, moyenne_y) * 1/(ecart_type(liste_x, moyenne_x) * ecart_type(liste_y, moyenne_y))
+    ecart_type_x = ecart_type(liste_x, moyenne_x)
+    ecart_type_y = ecart_type(liste_y, moyenne_y)
+    if ecart_type_x == 0: ecart_type_x = 1/1000000000
+    if ecart_type_y == 0: ecart_type_y = 1/1000000000
+    return covariance(liste_x, liste_y, moyenne_x, moyenne_y) * 1/(ecart_type_x * ecart_type_y)
 
 
 
