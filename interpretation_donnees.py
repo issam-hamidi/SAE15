@@ -1,7 +1,6 @@
 import fonctions as fc
 
 
-
 '''
 ============================================ PARTIE VELO===================================================
 '''
@@ -83,14 +82,15 @@ moyennes_voitures = extraction_moyennes_voitures("voitures.txt")
 moyenne_totale_velos = fc.moyenne(moyennes_velos)
 moyenne_totale_voitures = fc.moyenne(moyennes_voitures)
 
+nombre_prelevements = len(moyennes_velos)
 
 with open("donnees_courbe.dat", "w", encoding="utf-8") as fichier:
-    for i in range(12+1):
-        fichier.write("{} {} {} {}\n".format(i*30, moyennes_velos[i], i*30, moyennes_voitures[i]))
+    for i in range(nombre_prelevements):
+        fichier.write("{} {} {}\n".format(moyennes_velos[i], moyennes_voitures[i], i*10))
     fichier.close()
 
 
-#print(fc.coefficient_correlation(moyennes_velos, moyennes_voitures, moyenne_totale_velos, moyenne_totale_voitures))
+print(fc.coefficient_correlation(moyennes_velos, moyennes_voitures, moyenne_totale_velos, moyenne_totale_voitures))
 
 
 
