@@ -138,16 +138,14 @@ initialisation_voiture("voitures.txt")
 initialisation_velo("velos.txt")
 
 
-#faire une fonction extraction
-
 '''
 ============================================ Suite des données ===========================================
 Ici, nous ajoutons donc les données à la suite à un intervalle de temps de 10 minutes (600 secondes) jusqu'à atteindre un échantillon sur deux heures
 soit 12 * 10 minutes
 '''
 
-for i in range(600):
-    time.sleep(1)
+for i in range(12):
+    time.sleep(600)
     mise_a_jour_voiture("voitures.txt")
     mise_a_jour_velo("velos.txt")
 
