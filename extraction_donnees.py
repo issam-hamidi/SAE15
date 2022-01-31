@@ -1,3 +1,11 @@
+# Script d'extraction de données
+
+# Copyrith Issam Hamidi Donovan Blanc-Potard
+
+# Version 1.0
+
+# date : 22/01/2022
+
 import requests
 import time
 from lxml import etree
@@ -55,8 +63,8 @@ def extraction_donnees_voiture(parkings):
 
 def initialisation_voiture(nom_fichier):
     '''
-    Cette fonction sert à inscrire une première entrée de données afin d'initialiser le fichier qui contiendra les données concernant
-    les parkings de voitures
+    Cette fonction sert à effectuer une première requête et d'y inscrire les données obtenues.
+    Cette étape est nécessaire car la fonction mise_a_jour_voiture récupère les données sauvegardées afin d'y ajouter les nouvelles
 
     :param nom_fichier: Le nom du fichier que l'on veut initialiser afin d'y inscrire une première entrée de données
     :return: Ne retourne rien
@@ -69,6 +77,11 @@ def initialisation_voiture(nom_fichier):
 
 
 def mise_a_jour_voiture(nom_fichier):
+    '''
+    Cette fonction sert à ajouter les données actuelles des parkings voitures dans le fichier nom_fichier
+    :param nom_fichier: nom du fichier que l'on souhaite mettre à jour
+    :return: Ne retourne rien
+    '''
     liste_donnees = extraction_donnees_voiture(parkings)
     fichier = open(nom_fichier, "r", encoding="utf-8")
     lignes = [ligne.strip() for ligne in fichier]
@@ -84,15 +97,6 @@ def mise_a_jour_voiture(nom_fichier):
 ========================================================================================================================
 '''
 
-
-requete = requests.get("https://data.montpellier3m.fr/sites/default/files/ressources/TAM_MMM_VELOMAG.xml")
-
-brut = requete.text
-
-donnee = etree.XML(brut, parser)
-
-donnees = donnee.xpath("/vcs/sl/si")
-
 dico = {
     "Name": "na",
     "Availables": "av",
@@ -100,7 +104,25 @@ dico = {
     "To": "to"
 }
 
+
+def extraction_xml():
+    '''
+    Cette fonction sert à extraire les données xml du fichier TAM_MMM_VELOMAG.xml
+    puis de les parser et retourner le contenu des balises <si>
+    :return: Ne retourne rien
+    '''
+    requete = requests.get("https://data.montpellier3m.fr/sites/default/files/ressources/TAM_MMM_VELOMAG.xml")
+    brut = requete.text
+    donnee = etree.XML(brut, parser)
+    donnees = donnee.xpath("/vcs/sl/si")
+    return donnees
+
+
 def extraction_donnees_velo(donnees):
+    '''
+    :param donnees: contenu xml parsé des balises <si> du fichier TAM_MMM_VELOMAG.xml
+    :return: Retourne une liste de données de l'ensemble des parkings vélos sous un format définit
+    '''
     liste_donnees = []
     for element in donnees:
         chaine = ""
@@ -111,6 +133,13 @@ def extraction_donnees_velo(donnees):
     return liste_donnees
 
 def initialisation_velo(nom_fichier):
+    '''
+    Cette fonction sert à effectuer une première requête et d'y inscrire les données obtenues.
+    Cette étape est nécessaire car la fonction mise_a_jour_velo récupère les données sauvegardées afin d'y ajouter les nouvelles
+    :param nom_fichier: nom du fichier que l'on souhaite initialiser afin d'y inscrire une première entrée de données
+    :return: Ne retourne rien
+    '''
+    donnees = extraction_xml()
     fichier = open(nom_fichier, "w", encoding="utf-8")
     liste_donnees = extraction_donnees_velo(donnees)
     for element in liste_donnees:
@@ -118,20 +147,26 @@ def initialisation_velo(nom_fichier):
     fichier.close()
 
 def mise_a_jour_velo(nom_fichier):
+    '''
+    Cette fonction sert à ajouter les données actuelles des parkings vélos dans le fichier nom_fichier
+    :param nom_fichier: nom du fichier que l'on souhaite mettre à jour
+    :return: Ne retourne rien
+    '''
+    donnees = extraction_xml()
     liste_donnees = extraction_donnees_velo(donnees)
     fichier = open(nom_fichier, "r", encoding="utf-8")
-    lignes = [ligne.strip() for ligne in fichier]
+    lignes = [ligne.strip() for ligne in fichier] #ligne.strip() sert à supprimer les \n
     fichier.close()
     with open(nom_fichier, "w", encoding="utf-8") as fichier:
         for i in range(len(lignes)):
-            fichier.write(lignes[i]+liste_donnees[i])
+            fichier.write(lignes[i]+liste_donnees[i]) # on récupères les données précédents auxquelles on ajoute les nouvelles données
         fichier.close()
 
 
 '''
 ============================================ INITIALISATION =========================================
 Le but ici est d'initialiser les données conernant les parkings vélos en mettant en place une première requête, avant d'ajouter par la suite 
-une serie de données à un intervalle de temps de 10 minutes pendant une durée de deux heures
+une série de données à un intervalle de temps de 10 minutes pendant une durée de deux heures
 '''
 
 initialisation_voiture("voitures.txt")
@@ -140,14 +175,15 @@ initialisation_velo("velos.txt")
 
 '''
 ============================================ Suite des données ===========================================
-Ici, nous ajoutons donc les données à la suite à un intervalle de temps de 10 minutes (600 secondes) jusqu'à atteindre un échantillon sur deux heures
-soit 12 * 10 minutes
+Ici, nous ajoutons donc les données à la suite à un intervalle de temps de 5 minutes (300 secondes) jusqu'à atteindre un échantillon sur 3 heures
+soit 36 * 5 minute
 '''
 
-for i in range(12):
-    time.sleep(600)
+for i in range(36):
+    time.sleep(300)
     mise_a_jour_voiture("voitures.txt")
     mise_a_jour_velo("velos.txt")
+
 
 
 
