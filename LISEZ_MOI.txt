@@ -1,0 +1,3 @@
+Concernant le fonctionnement du programme:
+Si vous souhaitez en faire usage, il vous faudra tout d'abord exécuter le script extraction_donnees.py. 
+Une fois que celui-ci est terminé, vous pourrez alors exécuter le script interpretation_donnees.py
