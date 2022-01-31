@@ -1,3 +1,11 @@
+# Script d'interprétation de données
+
+# Copyright Issam Hamidi Donovan Blanc-Potard
+
+# Version 1.0
+
+# Date : 22/01/2022
+
 import fonctions as fc
 
 
@@ -28,7 +36,7 @@ def extraction_moyennes_velos(fichier):
     for i in range(nombre_prelevements):
         pourcentages = []
         for j in range(nombre_parkings):
-            parking = parkings[j][i]
+            parking = parkings[j][i] #on prélève les données par colonne afin de les trier par intervalle de temps (d'abord t0, puis t1 ...)
             parking = parking.strip(";")
             parking = parking.split(";")
             nom, dispo, de, jusqua = [element.split("=")[1] for element in parking]
@@ -44,7 +52,7 @@ def extraction_moyennes_velos(fichier):
 def extraction_moyennes_voitures(fichier):
     '''
     :param fichier: fichier à partir duquel on souhaite extraire les données
-    :return: Retourne la liste des Moyennes du taux d'occupation de tous les parkings voiture à intervalle de temps défini
+    :return: Retourne la liste des moyennes du taux d'occupation de tous les parkings voiture à intervalle de temps défini
     '''
     fichier = open(fichier, "r", encoding="utf-8")
     lignes = fichier.readlines()
@@ -64,7 +72,7 @@ def extraction_moyennes_voitures(fichier):
     for i in range(nombre_prelevements):
         pourcentages = []
         for j in range(nombre_parkings):
-            parking = parkings[j][i]
+            parking = parkings[j][i] #on prélève les données par colonne afin de les trier par intervalle de temps (d'abord t0, puis t1 ...)
             parking = parking.strip(";")
             parking = parking.split(";")
             date, nom, statut, libres, total = [element.split("=")[1] for element in parking]
@@ -86,12 +94,12 @@ nombre_prelevements = len(moyennes_velos)
 
 with open("donnees_courbe.dat", "w", encoding="utf-8") as fichier:
     for i in range(nombre_prelevements):
-        fichier.write("{} {} {}\n".format(moyennes_velos[i], moyennes_voitures[i], i*10))
+        fichier.write("{} {} {}\n".format(moyennes_velos[i], moyennes_voitures[i], i*5)) # ici, on inscrit les moyennes des parkings vélos, des parkings voitures ainsi que le temps (en min) sur une colonne différente
     fichier.close()
 
+coefficient_correlation = fc.coefficient_correlation(moyennes_velos, moyennes_voitures, moyenne_totale_velos, moyenne_totale_voitures)
 
-print(fc.coefficient_correlation(moyennes_velos, moyennes_voitures, moyenne_totale_velos, moyenne_totale_voitures))
-
+#print(coefficient_correlation)
 
 
 
