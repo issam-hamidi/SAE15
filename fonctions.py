@@ -1,3 +1,11 @@
+# Module de fonctions mathématiques
+
+# Copyright Issam Hamidi Donovan Blanc-Potard
+
+# Version 1.0
+
+# date : 22/01/2022
+
 from math import sqrt
 
 def pourcentage(a,b):
@@ -34,6 +42,13 @@ def ecart_type(liste, moyenne):
     return sqrt(variance)
 
 def covariance(liste_x, liste_y, moyenne_x, moyenne_y):
+    '''
+    :param liste_x: liste de valeurs
+    :param liste_y: liste de valeurs
+    :param moyenne_x: valeur moyenne de la liste liste_x
+    :param moyenne_y: valeur moyenne de la liste liste_y
+    :return: Retourne la covariance entre liste_x et liste_y
+    '''
     resultat = 0
     taille = len(liste_x)
     for i in range(taille):
@@ -42,6 +57,13 @@ def covariance(liste_x, liste_y, moyenne_x, moyenne_y):
     return resultat
 
 def coefficient_correlation(liste_x, liste_y, moyenne_x, moyenne_y):
+    '''
+    :param liste_x: liste de valeurs
+    :param liste_y: liste de valeurs
+    :param moyenne_x: valeur moyenne de la liste liste_x
+    :param moyenne_y: valeur moyenne de la liste liste_y
+    :return: Retourne la covariance entre liste_x et liste_y
+    '''
     ecart_type_x = ecart_type(liste_x, moyenne_x)
     ecart_type_y = ecart_type(liste_y, moyenne_y)
     if ecart_type_x == 0: ecart_type_x = 1/1000000000
